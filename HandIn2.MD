@@ -181,3 +181,60 @@ location: {
     $maxDistance: distance    
 }
 ```
+Med denne funktion, kan jeg som spiller finde alle **andre** der er inden for en given radius af min egen position.
+
+## GeoJSON
+Som demonstreret i tidligere afsnit, så har MongoDB rigtig mange gode funktioner til arbejde emd geografisk infomation og kan derved gøre arbejdet med at gemme disse data i en database meget nemt. Et alternativ til at lade MongoDB står for dette kunne f.eks. være GeoJSON (gju), som er et bibliotet til at arbejde med geografisk data.<br>
+I arbejdet med GeoJSON, gemte vi alle informationer in-memory og dermed udlod brugen af en reel database. Herunder er et eksemple på en metode der tjekker om en spiller er inden i vores *aftalte* spilleområde eller om de er uden for:
+```typescript 
+const gju = require ( 'geojson-utils' );
+...
+router.post('/isIn', async (req,res,next) => {
+    try {     
+        let position = toPoint(req.body.lon,req.body.lat)
+        let result = gju.pointInPolygon(position,gameArea)
+        let message = result 
+            ? "The Point was inside the GameArea"
+            : "The Point was not inside the GameArea"
+        res.json({"isIn":result, msg:message})
+    } catch (error) {
+        next(error)
+    }
+})
+```
+Ved at gøre brug GeoJSON's (gju) pointInPolygon() funtion til at teste om vores spiller er inden i eller uden for vores spilleområde (gameArea), det eneste vi skal gøre er at tage vores **longitude** og **latitude** fra request'en og omdanne dette til et punkt. GeoJSON vil med dette punkt teste om det ligger inden i poligonet **gameArea**. I funktionen herunder kan vi se hvordan vi omdanner **longitude** og **latitude** til et **Point**:
+```typescript
+const toPoint = (lon:number,lat:number) => {
+    return {
+        "type":"Point",
+        "coordinates":[lon,lat]
+    }
+} 
+```
+Ligesom vi kunne tjekke om en spiller var inden i spilleområdet, så havde vi med GeoJSON også mulighed for at finde den spiller der var tættest på os.
+```typescript
+router.post('/closestPlayer', async (req,res,next) => {
+    try {
+        let position = toPoint(req.body.lon,req.body.lat)
+        var otherPlayers = req.body.radius !== undefined 
+            ? nearbyPlayers(position, req.body.radius)
+            : nearbyPlayers(position)
+        let closestPlayer = {}
+        let bestDistance = Number.MAX_VALUE
+        otherPlayers.forEach((player) => {
+            var distance = gju.pointDistance(position,player['geometry'])
+            if(distance < bestDistance) {
+                closestPlayer = player
+                bestDistance = distance
+            }
+        })
+        res.json({player:closestPlayer, distance:bestDistance})
+    } catch (error) {
+        next(error)
+    }
+})
+```
+I metoden her kan vi se at vi løber alle vores spillere igennem, og tager deres position og tjekker op mod vores egen position
+```typescript
+var distance = gju.pointDistance(position,player['geometry'])
+```
