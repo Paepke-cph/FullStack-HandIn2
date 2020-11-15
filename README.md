@@ -72,7 +72,7 @@ after((done) => {
     ...
 })
 ```
-- ***it()** bruges til at udfører selve testene, it() kaldes med en streg og en metode (hvori testene udføres), stregen bliver brugt, ligesom describe til at beskrive hvad det forventede resultat skal være, altså den adfærd som vi tester for.
+- ***it()*** bruges til at udfører selve testene, it() kaldes med en streg og en metode (hvori testene udføres), stregen bliver brugt, ligesom describe til at beskrive hvad det forventede resultat skal være, altså den adfærd som vi tester for.
 ```typescript
 it('nearbyPlayers should return 1 player',() => {
     ...
