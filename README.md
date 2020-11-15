@@ -238,3 +238,4 @@ I metoden her kan vi se at vi løber alle vores spillere igennem, og tager deres
 ```typescript
 var distance = gju.pointDistance(position,player['geometry'])
 ```
+Det eneste vil skal gøre herfra er at holde styr på hvilken spiller der er tættest og den afstand der er til dem. Efter alle spillere er løbet igennem kan vi blot sende vores fundne resultat tilbage til clienten.
