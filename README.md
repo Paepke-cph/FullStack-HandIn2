@@ -110,7 +110,7 @@ assert.equal(foo, 'BOO')        // value verification
 ## MongoDB
 Til vores backend har vi haft gjort brug af en MongoDB, dokument orienteret database. Vi har altså i stedet for en relationel database, brugt mongoDB som i stedet gemmer data som JSON-lignende dokumenter.
 Forskellen mellem NoSQL og SQL, er at med f.eks mySql bliver en tabel defineret, og den data der skal ind i denne tabel **skal** overholde den specifikation tabelen er blevet udstyret med. Dette behøves ikke for en NoSql database, i disse collections kan der være sat en definition op for dokumenterne, men hvormod SQL ville brokke sig ved synet af noget der ikke *passede* ind, så tillader NoSQL disse forskelle. Følgende kunne være dokumenter der er indsat i den samme collection, men med forskellige data.
-```json
+```typescript
 {
     ISBN: 9780992461225,
     title: "JavaScript: Novice to Ninja",
