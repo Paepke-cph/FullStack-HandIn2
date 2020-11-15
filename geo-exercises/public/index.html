@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FullStack JavaScript 4. Semester</title>
+</head>
+
+<body>
+  <h1>Express Game API</h1>
+  <h3>api/game/nearbyPlayers</h3>
+  <h6>The endpoint can be used for getting all nearby players, excluding yourself.</h6>
+  <pre>
+    <code>
+      {
+        "username": "username here",
+        "password": "password here",
+        "lon": "longitude as a number here",
+        "lat": "latitude as a number here",
+        "distance": "distance (meters) in which to search for other players"
+      }
+    </code>
+  </pre>
+  <h3>api/game/getPostIfReached</h3>
+  <h6>Returns a Post if it's within range</h6>
+  <pre>
+    <code>
+      {
+        "postID": "Post's id here",
+        "lon": "longitude as a number here",
+        "lat": "latitude as a number here"
+      }
+    </code>
+  </pre>
+  <h3>api/game/updatePosition</h3>
+  <h6>The endpoint can be used to update your player position</h6>
+  <pre>
+    <code>
+      {
+        "username": "username here",
+        "password": "password here",
+        "lon": "longitude as a number here",
+        "lat": "latitude as a number here",
+        "distance": "distance (meters) in which to search for other players"
+      }
+    </code>
+  </pre>
+</body>
+</html>

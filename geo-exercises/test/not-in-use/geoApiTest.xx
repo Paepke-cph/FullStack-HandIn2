@@ -1,0 +1,111 @@
+import { doesNotMatch } from "assert";
+import { expect } from "chai";
+import { Server } from "http";
+import fetch from "node-fetch";
+
+let server: Server
+const TEST_PORT = "7777"
+
+describe('Test Geo', () => {
+    let URL: string
+    before(function(done){
+        this.enableTimeouts(false)
+        process.env["PORT"] = TEST_PORT
+        server = require('../src/app').server
+        URL = `http://localhost:${process.env.PORT}`
+        done()
+    })
+
+    after((done) => {
+        server.close()
+        done()
+    })
+
+    it('Should return true', async function(){
+        const body = {
+            "lat":55.684727,
+            "lon":12.483571
+        }
+        const data = await fetch(`${URL}/api/geo/isIn`,{
+            method:"post",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" }
+        })
+        let res = await data.json()
+        expect(res["isIn"]).to.be.equal(true)
+        expect(res['msg']).to.be.equal("The Point was inside the GameArea")
+    })
+
+    it('Should return false', async function(){
+        const body = {
+            "lat":57.684727,
+            "lon":12.483571
+        }
+        const data = await fetch(`${URL}/api/geo/isIn`,{
+            method:"post",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" }
+        })
+        let res = await data.json()
+        expect(res["isIn"]).to.be.equal(false)
+        expect(res['msg']).to.be.equal("The Point was not inside the GameArea")
+    })
+
+    it('playersNearBy Should have length 5 (With Radius)', async function(){
+        const body = {
+            "lat":55.684727,
+            "lon":12.483571,
+            "radius": 1000
+        }
+        const data = await fetch(`${URL}/api/geo/playersNearby`,{
+            method:"post",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" }
+        })
+        let res = await data.json()
+        expect(res["players"].length).to.be.equal(5);
+    })
+
+    it('playersNearBy Should have length 5', async function(){
+        const body = {
+            "lat":55.684727,
+            "lon":12.483571
+        }
+        const data = await fetch(`${URL}/api/geo/playersNearby`,{
+            method:"post",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" }
+        })
+        let res = await data.json()
+        expect(res["players"].length).to.be.equal(5);
+    })
+
+    it('Closest Player is Carl (With Radius)', async function(){
+        const body = {
+            "lat":55.684727,
+            "lon":12.483571,
+            "radius":1000
+        }
+        const data = await fetch(`${URL}/api/geo/closestPlayer`,{
+            method:"post",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" }
+        })
+        let res = await data.json()
+        expect(res["player"].properties.name).to.be.equal("Carl");
+    })
+    
+    it('Closest Player is Carl', async function(){
+        const body = {
+            "lat":55.684727,
+            "lon":12.483571,
+        }
+        const data = await fetch(`${URL}/api/geo/closestPlayer`,{
+            method:"post",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" }
+        })
+        let res = await data.json()
+        expect(res["player"].properties.name).to.be.equal("Carl");
+    })
+})

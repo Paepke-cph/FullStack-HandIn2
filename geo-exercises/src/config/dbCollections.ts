@@ -1,0 +1,9 @@
+const USER_COLLECTION = 'users'
+const POST_COLLECTION = 'posts'
+const POSITION_COLLECTION = "positions"
+
+export {
+    USER_COLLECTION,
+    POST_COLLECTION,
+    POSITION_COLLECTION
+}
